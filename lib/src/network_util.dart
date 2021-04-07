@@ -9,6 +9,7 @@ import 'utils/polyline_result.dart';
 
 class NetworkUtil {
   static const String STATUS_OK = "ok";
+  static const String STATUS_ZERO = "ZERO_RESULTS";
 
   ///Get the encoded string from google directions api
   ///
@@ -45,7 +46,7 @@ class NetworkUtil {
     Uri uri =
         Uri.https("maps.googleapis.com", "maps/api/directions/json", params);
 
-    //String url = uri.toString();
+    // String url = uri.toString();
     // print('GOOGLE MAPS URL: ' + url);
     var response = await http.get(uri);
     if (response.statusCode == 200) {
@@ -58,6 +59,9 @@ class NetworkUtil {
             parsedJson["routes"][0]["overview_polyline"]["points"]);
       } else {
         result.errorMessage = parsedJson["error_message"];
+        if((parsedJson["status"]??"").toLowerCase() != STATUS_OK){
+          result.errorMessage = parsedJson["status"];
+        }
       }
     }
     return result;

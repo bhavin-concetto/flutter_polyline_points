@@ -16,9 +16,9 @@ class PolylineResult {
   List<PointLatLng> points;
 
   /// the error message returned from google, if none, the result will be empty
-  String errorMessage;
+  String? errorMessage;
 
-  PolylineResult({this.status, this.points = const [], this.errorMessage = ""});
+  PolylineResult({this.status, this.points = const [], this.errorMessage});
 
 
 }
