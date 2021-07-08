@@ -1,10 +1,10 @@
 import 'dart:convert';
 
-import '../src/utils/polyline_waypoint.dart';
-import '../src/utils/request_enums.dart';
-import '../src/PointLatLng.dart';
 import 'package:http/http.dart' as http;
 
+import '../src/PointLatLng.dart';
+import '../src/utils/polyline_waypoint.dart';
+import '../src/utils/request_enums.dart';
 import 'utils/polyline_result.dart';
 
 class NetworkUtil {
@@ -46,7 +46,6 @@ class NetworkUtil {
     Uri uri =
         Uri.https("maps.googleapis.com", "maps/api/directions/json", params);
 
-    // String url = uri.toString();
     // print('GOOGLE MAPS URL: ' + url);
     var response = await http.get(uri);
     if (response.statusCode == 200) {
@@ -59,7 +58,7 @@ class NetworkUtil {
             parsedJson["routes"][0]["overview_polyline"]["points"]);
       } else {
         result.errorMessage = parsedJson["error_message"];
-        if((parsedJson["status"]??"").toLowerCase() != STATUS_OK){
+        if ((parsedJson["status"] ?? "").toLowerCase() != STATUS_OK) {
           result.errorMessage = parsedJson["status"];
         }
       }
