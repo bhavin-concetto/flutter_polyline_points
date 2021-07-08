@@ -56,6 +56,14 @@ class NetworkUtil {
           parsedJson["routes"].isNotEmpty) {
         result.points = decodeEncodedPolyline(
             parsedJson["routes"][0]["overview_polyline"]["points"]);
+        try {
+          result.totalDistance = parsedJson["routes"][0]["legs"][0]["distance"]
+                  ["value"]
+              .toDouble();
+        } catch (e) {
+          print("error is $e");
+          result.totalDistance = -1;
+        }
       } else {
         result.errorMessage = parsedJson["error_message"];
         if ((parsedJson["status"] ?? "").toLowerCase() != STATUS_OK) {
