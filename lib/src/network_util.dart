@@ -45,8 +45,7 @@ class NetworkUtil {
     }
     Uri uri =
         Uri.https("maps.googleapis.com", "maps/api/directions/json", params);
-
-    // print('GOOGLE MAPS URL: ' + url);
+    //print('GOOGLE MAPS URL: ' + uri.toString());
     var response = await http.get(uri);
     if (response.statusCode == 200) {
       var parsedJson = json.decode(response.body);
@@ -54,16 +53,21 @@ class NetworkUtil {
       if (parsedJson["status"]?.toLowerCase() == STATUS_OK &&
           parsedJson["routes"] != null &&
           parsedJson["routes"].isNotEmpty) {
+        print("got routes :" + parsedJson["routes"][0].toString());
         result.points = decodeEncodedPolyline(
             parsedJson["routes"][0]["overview_polyline"]["points"]);
         try {
-          result.totalDistance = parsedJson["routes"][0]["legs"][0]["distance"]
-                  ["value"]
-              .toDouble();
+          double totalDistance = 0.0;
+          List<dynamic>? legs = parsedJson["routes"][0]["legs"];
+          for (int i = 0; i < legs!.length; ++i) {
+            totalDistance += legs[i]["distance"]["value"];
+          }
+          result.totalDistance = totalDistance;
         } catch (e) {
           print("error is $e");
           result.totalDistance = -1;
         }
+        // print("total distance :  ${result.totalDistance}");
       } else {
         result.errorMessage = parsedJson["error_message"];
         if ((parsedJson["status"] ?? "").toLowerCase() != STATUS_OK) {
